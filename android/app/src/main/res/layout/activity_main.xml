@@ -292,6 +292,7 @@
             android:gravity="top|start"
             android:hint="Assign a coding task or type / for more"
             android:inputType="textCapSentences|textMultiLine"
+            android:imeOptions="actionSend"
             android:maxLines="4"
             android:padding="0dp"
             android:textColor="@color/mikoo_text_primary"
