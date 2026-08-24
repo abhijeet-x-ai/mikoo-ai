@@ -1,8 +1,11 @@
+# Self-contained Mikoo training research note
 
-## Official dataset findings
+Mikoo's training corpus must be assembled from data that the project can legally use, transform, and redistribute. The source manifest should record the original repository or author, path, commit, license, attribution text, checksum, opt-out state, and whether redistribution is permitted. A missing or unclear license is a rejection reason.
 
-OpenCodeInstruct's Hugging Face dataset card identifies it as a code-focused instruction-tuning dataset with approximately 4.97 million rows, structured fields such as input/output/domain/generation metadata and test metrics, and a `cc-by-4.0` dataset license. It may be useful as a candidate source, but Mikoo must verify the card, content provenance, attribution requirements, and downstream redistribution conditions at the time of use. Source: https://huggingface.co/datasets/nvidia/OpenCodeInstruct
+Recommended sources are authored examples, contributor-approved code, permissively licensed repositories, generated examples produced under terms that permit training, and real issue/patch/test records whose redistribution rights are documented. Source code, documentation, tests, compiler messages, configuration files, and repair trajectories should be normalized into Mikoo's common record schema.
 
-CodeSearchNet's official repository describes approximately 2 million comment/code pairs from open-source libraries, with code in Python, JavaScript, Ruby, Go, Java, and PHP. It uses JSONL records containing language, repository/path, code, docstring, and partition metadata; the repository tooling is MIT-licensed, but the source code used as data has its own license files. Source: https://github.com/github/CodeSearchNet
+Do not use private code, credentials, personal data, copied benchmark answers, hidden evaluation patches, malware payloads, or code with unclear redistribution rights. Keep evaluation repositories and prompts isolated from training. Every training record must be deduplicated, provenance-preserving, and linked to an actual test or compiler result when it claims a repair.
 
-SWE-bench's official pages describe repository-level issue resolution where a model receives a codebase and issue, generates a patch, and is evaluated by applying the patch and running tests. SWE-bench Verified is a human-validated subset of 500 instances. Sources: https://www.swebench.com/SWE-bench/ and https://www.swebench.com/verified.html
+The model should learn from the engineering loop: request, bounded context, plan, minimal patch, test or compiler feedback, correction, and truthful final report. The first release should prioritize verified repair trajectories, test generation, repository context selection, and safe tool actions over the volume of raw code.
+
+Inference is fully local and requires no network service. Teacher-generated records, if used during training, must be exported into the local dataset with teacher terms, prompt, output, filter decision, and verification status recorded. The teacher is not part of the Mikoo Android runtime.

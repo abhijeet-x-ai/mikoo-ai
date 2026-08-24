@@ -4,7 +4,7 @@
 
 Mikoo AI should be fine-tuned as a **focused coding agent**, not as a generic chatbot with a few code examples added. The most valuable data is not only raw source code; it is the complete engineering loop: a natural-language request, bounded repository context, a plan, a minimal patch, tests, compiler/test feedback, a correction, and an honest final report.
 
-The recommended dataset should combine three sources: provenance-preserving licensed code and documentation, authored task examples, and filtered teacher-generated trajectories. CodeSearchNet is a useful source for code/docstring and retrieval-style examples across Python, JavaScript, Ruby, Go, Java, and PHP, but its tooling license does not replace the licenses of the source repositories [1]. NVIDIA's OpenCodeInstruct is a candidate source for code instruction tuning and is labeled `cc-by-4.0` on its Hugging Face card, but the exact dataset version, provenance, attribution obligations, and redistribution terms must be checked before use [2]. BigCode's governance guidance is a good operational model: retain provenance, honor original license terms and attribution, and support opt-out/removal handling [3].
+The recommended dataset should combine three sources: provenance-preserving licensed code and documentation, authored task examples, and filtered teacher-generated trajectories. Any public corpus must be accepted only after its exact license, source provenance, attribution obligations, opt-out handling, and redistribution terms have been reviewed. Tooling or hosting terms never replace the licenses of the original source repositories.
 
 ## Target skills
 
@@ -48,8 +48,8 @@ The mixture should be sampled by task difficulty. Begin with short single-file t
 |---|---|---|
 | Authored examples | High-quality Bengali/Hindi/English instructions, Android/Kotlin examples, safety cases, and product-specific response style | Keep copyright and contributor consent records |
 | Permissively licensed repositories | Code completion, documentation, tests, and real bug-fix examples | Preserve repository, path, commit, SPDX license, attribution, and checksum |
-| CodeSearchNet-derived records | Code/docstring alignment and retrieval-style training | Keep source-language license files and repository provenance [1] |
-| OpenCodeInstruct-derived records | Candidate instruction-tuning examples | Verify exact card/version, `cc-by-4.0` obligations, provenance, and downstream redistribution before inclusion [2] |
+| Public-corpus-derived records | Code/docstring alignment and retrieval-style training | Keep source-language license files and repository provenance; reject unclear licenses |
+| Teacher-generated records | Candidate instruction-tuning examples | Verify teacher terms, provenance, human/programmatic verification, and downstream redistribution before inclusion |
 | Issue/patch datasets | Bug fixing, regression tests, and issue-to-diff tasks | Keep issue/commit provenance; isolate evaluation instances |
 | Teacher-generated data | Tool trajectories, multilingual tasks, hard negatives, and repair attempts | Record teacher identity, terms, prompt, seed/settings, filter decisions, and human/programmatic verification |
 | User-contributed tasks | Product-specific coding style and real failure modes | Obtain explicit contribution terms and remove secrets/private data |
@@ -158,7 +158,7 @@ Split by repository and project family, not by random record. A repository, fork
 | Device smoke set | Small local tasks for Android latency, memory, cancellation, and offline behavior |
 | Repository holdout | Unseen multi-file tasks for context selection and patch quality |
 
-The repository-level test should include real patch application and test execution. SWE-bench evaluates real GitHub issues by applying generated patches and running repository tests [4], while SWE-bench Verified is a human-validated subset of 500 instances [5]. Use these as external evaluation references; do not train on their test prompts or hidden patches.
+The repository-level test should include real patch application and test execution. Keep any external benchmark prompts, hidden patches, and answer keys outside the training corpus; use only locally authorized evaluation tasks and repository holdouts.
 
 ## Evaluation gates
 
@@ -197,12 +197,4 @@ The most important investment is **verified repair trajectories with tests**, no
 
 ## References
 
-[1]: https://github.com/github/CodeSearchNet "GitHub CodeSearchNet repository"
-
-[2]: https://huggingface.co/datasets/nvidia/OpenCodeInstruct "NVIDIA OpenCodeInstruct dataset card"
-
-[3]: https://www.bigcode-project.org/docs/about/the-stack/ "BigCode The Stack data governance"
-
-[4]: https://www.swebench.com/SWE-bench/ "SWE-bench overview"
-
-[5]: https://www.swebench.com/verified.html "SWE-bench Verified"
+This plan intentionally contains no external model or AI-service dependency. Source manifests should store the reviewed license text and provenance records for any data admitted into the local training corpus.
