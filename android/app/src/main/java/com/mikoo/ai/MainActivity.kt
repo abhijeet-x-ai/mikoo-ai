@@ -105,10 +105,10 @@ class MainActivity : Activity() {
     private fun loadBundledCheckpoint(): Boolean {
         return try {
             val target = File(filesDir, "mikoo_bootstrap.bin")
-            if (!target.exists() || target.length() == 0L) {
-                assets.open("mikoo_bootstrap.bin").use { source ->
-                    target.outputStream().use { destination -> source.copyTo(destination) }
-                }
+            // Always refresh the app-private copy so an APK upgrade cannot
+            // continue using weights from an older build.
+            assets.open("mikoo_bootstrap.bin").use { source ->
+                target.outputStream().use { destination -> source.copyTo(destination) }
             }
             nativeLoadModel(target.absolutePath)
         } catch (_: Throwable) {
