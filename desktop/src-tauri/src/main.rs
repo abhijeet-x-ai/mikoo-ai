@@ -86,6 +86,14 @@ fn locate_model(app: &AppHandle) -> Result<PathBuf, String> {
             .resource_dir()
             .ok()
             .map(|dir| dir.join("models/mikoo_bootstrap.bin")),
+        app.path()
+            .resource_dir()
+            .ok()
+            .map(|dir| dir.join("_up_/models/mikoo_bootstrap.bin")),
+        app.path()
+            .resource_dir()
+            .ok()
+            .map(|dir| dir.join("resources/models/mikoo_bootstrap.bin")),
         std::env::current_dir()
             .ok()
             .map(|dir| dir.join("models/mikoo_bootstrap.bin")),
