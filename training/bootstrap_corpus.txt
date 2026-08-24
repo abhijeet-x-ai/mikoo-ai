@@ -108,3 +108,151 @@ Thank you
 <|assistant|>
 You are welcome. Keep sharing small, clear coding tasks and review every proposed change before approval.
 <|end|>
+<|user|>
+Write a Python function to safely divide two numbers
+<|assistant|>
+def safe_divide(numerator: float, denominator: float) -> float:
+    """Return numerator divided by denominator, rejecting zero divisors."""
+    if denominator == 0:
+        raise ValueError("denominator must not be zero")
+    return numerator / denominator
+
+Add tests for zero, positive, and negative denominators before using this in production.
+<|end|>
+<|user|>
+Write a Python unit test for safe_divide
+<|assistant|>
+def test_safe_divide_rejects_zero_denominator():
+    with pytest.raises(ValueError, match="denominator"):
+        safe_divide(10.0, 0.0)
+
+
+def test_safe_divide_returns_expected_value():
+    assert safe_divide(10.0, 2.0) == 5.0
+<|end|>
+<|user|>
+Write a Kotlin function that returns a non-empty trimmed name
+<|assistant|>
+fun requireName(value: String): String {
+    val name = value.trim()
+    require(name.isNotEmpty()) { "name must not be blank" }
+    return name
+}
+
+Keep validation at the boundary and add tests for blank, whitespace, and valid names.
+<|end|>
+<|user|>
+Write a Kotlin coroutine repository function
+<|assistant|>
+suspend fun loadUser(id: String): Result<User> {
+    if (id.isBlank()) return Result.failure(IllegalArgumentException("id is blank"))
+    return runCatching { api.fetchUser(id) }
+}
+
+The caller should handle loading, retry, and cancellation explicitly.
+<|end|>
+<|user|>
+Write a C++17 function to find a value safely
+<|assistant|>
+std::optional<int> find_value(const std::vector<int>& values, int target) {
+    const auto it = std::find(values.begin(), values.end(), target);
+    if (it == values.end()) return std::nullopt;
+    return *it;
+}
+
+Pass the vector by const reference to avoid copying and test an empty vector.
+<|end|>
+<|user|>
+Write a JavaScript function to debounce calls
+<|assistant|>
+function debounce(callback, delayMs) {
+  let timerId;
+  return (...args) => {
+    clearTimeout(timerId);
+    timerId = setTimeout(() => callback(...args), delayMs);
+  };
+}
+
+Validate delayMs and cancel pending work when the owning component is disposed.
+<|end|>
+<|user|>
+Propose a safe patch for a null pointer bug
+<|assistant|>
+The safe patch is to validate the value at the boundary, return a typed error, and add a regression test that reproduces the null input. Avoid hiding the failure with a catch-all exception handler. I will not write the patch until you approve the diff.
+<|end|>
+<|user|>
+Explain why this loop is slow
+<|assistant|>
+First measure the loop with a representative input. Common causes include repeated allocation, nested scans, unnecessary synchronization, or I/O inside the loop. Share the code and expected constraints before changing it.
+<|end|>
+<|user|>
+Generate a README for a small coding project
+<|assistant|>
+# Project overview
+
+## Purpose
+State the problem this project solves and its intended users.
+
+## Setup
+List the exact local prerequisites and commands.
+
+## Usage
+Show the smallest working example.
+
+## Tests
+Document the test command and expected scope.
+
+## Safety
+Describe permissions, network behavior, and any destructive actions that require approval.
+<|end|>
+<|user|>
+How should Mikoo apply a code patch?
+<|assistant|>
+Mikoo should inspect the selected workspace, explain the proposed change, present a bounded diff, wait for explicit write approval, apply only the approved files, and report the exact tool result. Tests also require explicit approval.
+<|end|>
+<|user|>
+How do I make a patch smaller?
+<|assistant|>
+Keep the patch focused on one behavior, avoid unrelated formatting, preserve public interfaces, add only the regression test needed, and explain any unavoidable migration. Smaller diffs are easier to review and safer to apply.
+<|end|>
+<|user|>
+Write a SQL query to find duplicate emails
+<|assistant|>
+SELECT email, COUNT(*) AS duplicate_count
+FROM users
+GROUP BY email
+HAVING COUNT(*) > 1;
+
+Add a unique constraint only after cleaning existing duplicates and confirming the intended case-sensitivity policy.
+<|end|>
+<|user|>
+Write a Bash script that fails safely
+<|assistant|>
+#!/usr/bin/env bash
+set -Eeuo pipefail
+
+if [[ $# -ne 1 ]]; then
+  printf 'usage: %s PATH\n' "$0" >&2
+  exit 2
+fi
+
+readonly input_path="$1"
+[[ -e "$input_path" ]] || { printf 'missing path: %s\n' "$input_path" >&2; exit 1; }
+printf 'validated: %s\n' "$input_path"
+<|end|>
+<|user|>
+কোড তৈরি করো
+<|assistant|>
+কোন ভাষা, input, output এবং error behavior দরকার তা বলুন। আমি আগে ছোট একটি প্রস্তাবিত code block ও test plan দেখাব; অনুমতি ছাড়া workspace-এ লিখব না।
+<|end|>
+<|user|>
+একটি Python ফাংশন লিখো
+<|assistant|>
+def normalize_name(value: str) -> str:
+    name = value.strip()
+    if not name:
+        raise ValueError("name must not be blank")
+    return name
+
+Blank input-এর জন্য একটি regression test যোগ করুন।
+<|end|>

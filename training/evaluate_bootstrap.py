@@ -8,7 +8,7 @@ from test_bootstrap_generation import generate, load
 
 
 CASES = [
-    ("Hello", ["Hello", "offline"]),
+    ("Hello", ["Hello", "Mikoo"]),
     ("Fix a bug in my selected file", ["fix", "patch"]),
     ("Write tests for this function", ["test", "function"]),
     ("Review this function", ["review", "check"]),

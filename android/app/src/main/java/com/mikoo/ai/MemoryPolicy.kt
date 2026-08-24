@@ -14,7 +14,7 @@ object MemoryPolicy {
     const val DEFAULT_CONTEXT_TOKENS = 512
     const val RECOMMENDED_CONTEXT_TOKENS = 1024
     const val STRESS_CONTEXT_TOKENS = 2048
-    const val DEFAULT_GENERATION_TOKENS = 256
+    const val DEFAULT_GENERATION_TOKENS = 768
 
     fun processPssMb(): Long = Debug.getPss() / 1024L
 

@@ -16,6 +16,7 @@ std::atomic<bool> g_cancel{false};
 constexpr uint32_t kVocab = 256;
 constexpr uint32_t kEmbed = 128;
 constexpr uint32_t kHidden = 256;
+constexpr int kMaxGenerationTokens = 1024;
 constexpr char kMagic[8] = {'M', 'K', 'G', 'R', 'U', '0', '1', '\0'};
 
 struct BootstrapModel {
@@ -119,9 +120,10 @@ float sigmoid(float value) {
     return z / (1.0f + z);
 }
 
-void gru_step(uint8_t token, std::vector<float>& hidden) {
-    std::vector<float> input_gate(3 * kHidden, 0.0f);
-    std::vector<float> recurrent_gate(3 * kHidden, 0.0f);
+void gru_step(uint8_t token, std::vector<float>& hidden,
+              std::vector<float>& input_gate, std::vector<float>& recurrent_gate) {
+    std::fill(input_gate.begin(), input_gate.end(), 0.0f);
+    std::fill(recurrent_gate.begin(), recurrent_gate.end(), 0.0f);
     const float* x = &g_model.embedding[static_cast<size_t>(token) * kEmbed];
 
     for (uint32_t gate = 0; gate < 3; ++gate) {
@@ -184,10 +186,12 @@ std::string generate_with_bootstrap(const std::string& prompt, int max_tokens) {
     if (user.size() > 1024) user = user.substr(user.size() - 1024);
     const std::string model_prompt = "<|user|>\n" + user + "\n<|assistant|>\n";
     std::vector<float> hidden(kHidden, 0.0f);
-    for (unsigned char byte : model_prompt) gru_step(byte, hidden);
+    std::vector<float> input_gate(3 * kHidden, 0.0f);
+    std::vector<float> recurrent_gate(3 * kHidden, 0.0f);
+    for (unsigned char byte : model_prompt) gru_step(byte, hidden, input_gate, recurrent_gate);
 
     std::string generated;
-    const int limit = std::max(32, std::min(max_tokens, 256));
+    const int limit = std::max(32, std::min(max_tokens, kMaxGenerationTokens));
     for (int index = 0; index < limit; ++index) {
         int best_token = 0;
         float best_score = -INFINITY;
@@ -204,7 +208,7 @@ std::string generate_with_bootstrap(const std::string& prompt, int max_tokens) {
         }
         if (g_cancel.load(std::memory_order_acquire)) break;
         generated.push_back(static_cast<char>(best_token));
-        gru_step(static_cast<uint8_t>(best_token), hidden);
+        gru_step(static_cast<uint8_t>(best_token), hidden, input_gate, recurrent_gate);
         if (generated.find("<|end|>") != std::string::npos) break;
     }
     return trim_generated(generated);
@@ -235,7 +239,7 @@ extern "C" JNIEXPORT jstring JNICALL
 Java_com_mikoo_ai_MainActivity_nativeGenerate(JNIEnv* env, jobject /* thiz */, jstring prompt,
                                               jint max_tokens, jint context_tokens) {
     const std::string input = jstring_to_utf8(env, prompt);
-    const int bounded_tokens = max_tokens < 1 ? 1 : (max_tokens > 256 ? 256 : max_tokens);
+    const int bounded_tokens = max_tokens < 1 ? 1 : (max_tokens > kMaxGenerationTokens ? kMaxGenerationTokens : max_tokens);
     const int bounded_context = context_tokens < 256 ? 256 : (context_tokens > 2048 ? 2048 : context_tokens);
     if (input.size() > static_cast<size_t>(bounded_context) * 16) {
         return utf8_to_jstring(env, "Input exceeds the native safety bound.");

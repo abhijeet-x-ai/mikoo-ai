@@ -74,10 +74,20 @@ def generate(arrays, user: str, limit: int = 180) -> str:
 def main() -> None:
     parser = argparse.ArgumentParser()
     parser.add_argument("checkpoint")
+    parser.add_argument("--limit", type=int, default=768)
     args = parser.parse_args()
     arrays = load(args.checkpoint)
-    for prompt in ("Hello", "Fix a bug in my selected file", "Write tests for this function"):
-        print(f"PROMPT: {prompt}\nRESPONSE: {generate(arrays, prompt)}\n")
+    for prompt in (
+        "Hello",
+        "Fix a bug in my selected file",
+        "Write tests for this function",
+        "Write a Python function to safely divide two numbers",
+        "Write a Kotlin function that returns a non-empty trimmed name",
+        "Write a C++17 function to find a value safely",
+        "Generate a README for a small coding project",
+    ):
+        response = generate(arrays, prompt, args.limit)
+        print(f"PROMPT: {prompt}\nOUTPUT_UNITS: {len(response.encode('utf-8'))}\nRESPONSE: {response}\n")
 
 
 if __name__ == "__main__":
