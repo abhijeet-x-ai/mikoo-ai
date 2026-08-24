@@ -61,5 +61,28 @@
     "production_model": false,
     "self_authored_corpus": "../training/bootstrap_corpus.txt"
   },
-  "status": "bootstrap_checkpoint_integrated_production_checkpoint_pending"
+  "teacher_profile": {
+    "parameter_count_target": 6000000000,
+    "runtime_role": "training_and_distillation_only",
+    "direct_2gb_android_runtime": false,
+    "raw_int4_weight_estimate_gib": 2.79,
+    "requires_external_cuda_training_machine": true
+  },
+  "mobile_student_profiles": [
+    {
+      "name": "mikoo_mobile_354m",
+      "parameter_count": 353950848,
+      "raw_int4_weight_estimate_mib": 168.8,
+      "target_runtime": "2gb_android",
+      "status": "planned_production_student"
+    },
+    {
+      "name": "mikoo_mobile_plus_500_700m",
+      "parameter_count_range": [500000000, 700000000],
+      "raw_int4_weight_estimate_mib_range": [238.4, 333.8],
+      "target_runtime": "2gb_android_after_device_pss_validation",
+      "status": "distillation_candidate"
+    }
+  ],
+  "status": "bootstrap_checkpoint_integrated_6b_teacher_profile_defined_production_student_pending"
 }
