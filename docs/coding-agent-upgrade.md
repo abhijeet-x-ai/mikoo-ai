@@ -4,7 +4,7 @@
 
 Mikoo AI has been upgraded in design and project structure from a general offline chat assistant to a **focused offline coding agent**. The new target covers code completion, code explanation, unit-test generation, debugging, bug fixing, refactoring, code translation, repository-context retrieval, patch proposal, and safe structured tool use.
 
-The model remains subject to the existing hardware contract: a hard **749 MB peak application-RAM ceiling**, an operational target of **650 MB or less**, and a smooth default profile for 2 GB RAM Android phones. The preferred profile is INT4-group quantization, 512-token context, one inference worker, batch size one, and a 256-token generation cap.
+The model remains subject to the existing hardware contract: a hard **749 MB peak application-RAM ceiling**, an operational target of **650 MB or less**, and a smooth default profile for 2 GB RAM Android phones. The preferred profile is INT4-group quantization, 512-token context, one inference worker, batch size one, and a 768 byte-token default generation cap with a 1,024-unit native ceiling.
 
 ## Capability boundary
 
@@ -24,7 +24,7 @@ The correct training sequence is code-language pretraining, instruction tuning, 
 
 Training examples should include both successful and failed attempts: compiler errors, failing tests, patch conflicts, corrections, minimal diffs, and final summaries. The student should learn not to claim that a tool succeeded without a tool result. Hidden chain-of-thought is not required; concise plans, structured actions, observable tool results, and final explanations are sufficient for the product.
 
-Training from scratch or distilling this model requires a separate GPU-capable environment. The current sandbox has no detected PyTorch installation or CUDA GPU, so no trained checkpoint is claimed. The repository includes the model trainer, data cleaner, code-record schema, training configuration, prompt templates, tool schema, and evaluation harness needed for the next training machine.
+Training the 354M production model from scratch or distilling it requires a separate GPU-capable environment. The current sandbox has 6 CPU cores, approximately 3.8 GiB RAM, 2 GiB swap, and no CUDA GPU. It can train the self-authored bootstrap checkpoint and run pipeline smoke tests, but not a useful high-data production run. The repository includes the model trainer, data cleaner, license/provenance gates, code-record schema, training configuration, prompt templates, tool schema, and evaluation harness needed for the next training machine.
 
 ## Evaluation plan
 
@@ -46,11 +46,11 @@ A coding model must not be evaluated only on short function generation. Mikoo's 
 
 The repository now includes `docs/coding-agent-spec.md`, `docs/coding-training-plan.md`, `model/coding_agent_tools.schema.json`, `model/coding_prompt_templates.md`, `training/code_record.schema.json`, coding-agent configuration sections, `benchmarks/coding_eval.py`, `android/.../WorkspacePolicy.kt`, `android/.../CodingAgentContract.kt`, an offline workspace picker, and expanded validation tests.
 
-The native C++ bridge remains deliberately guarded until a real trained checkpoint and validated inference runtime are connected. It does not fabricate code-agent output or claim that a patch/test operation happened. This is the correct interim behavior for an untrained model artifact.
+The native C++ bridge now loads the bundled self-authored bootstrap checkpoint and performs bounded offline neural generation. The planned 354M production runtime remains guarded until its larger checkpoint, tokenizer, quantization, and validation are complete. The app does not claim that a patch or test operation happened without an observable local tool result.
 
 ## Honest status
 
-The system is **designed and scaffolded as a coding agent**, but it is not yet a trained “super coding agent.” The missing steps are legal code-data preparation, tokenizer training, GPU pretraining, instruction tuning, teacher distillation, quantization, runtime integration, Android compilation, and measurements on a real 2 GB Android phone. No tokens/sec, coding benchmark score, APK, or trained-model quality number is claimed until those steps are executed.
+The system now includes a real local neural bootstrap coding model and an Android JNI inference path, but it is not yet a trained “super coding agent.” The remaining production steps are high-volume license-audited data preparation, 24,576-token tokenizer training, GPU pretraining, instruction and agent-trajectory tuning, INT4 quantization, production runtime integration, and measurements on a real 2 GB Android phone. The bootstrap acceptance suite passes 5/5 cases; this is not a broad coding benchmark or a claim of production-model quality.
 
 ## References
 

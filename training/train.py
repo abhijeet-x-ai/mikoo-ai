@@ -121,11 +121,16 @@ def main() -> None:
     parser.add_argument("--grad-accumulation", type=int, default=32)
     parser.add_argument("--lr", type=float, default=3e-4)
     parser.add_argument("--device", default="cuda" if torch.cuda.is_available() else "cpu")
+    parser.add_argument("--allow-cpu-production", action="store_true", help="allow the 354M model on CPU; unsafe for the default sandbox")
     args = parser.parse_args()
 
     device = torch.device(args.device)
-    if device.type == "cpu":
-        print("WARNING: CPU training is a smoke-test path; use a CUDA-capable GPU for serious pretraining.")
+    if device.type == "cpu" and not args.allow_cpu_production:
+        raise SystemExit(
+            "The 354M production trainer requires a CUDA-capable training machine. "
+            "Use train_bootstrap_gru.py for local smoke tests, or pass --allow-cpu-production "
+            "only after provisioning enough host memory."
+        )
     tokens = np.load(args.tokens, mmap_mode="r")
     model = MikooModel().to(device)
     optimizer = torch.optim.AdamW(model.parameters(), lr=args.lr, weight_decay=0.1)
