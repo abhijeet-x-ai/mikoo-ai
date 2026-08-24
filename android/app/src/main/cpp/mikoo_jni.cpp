@@ -67,7 +67,13 @@ Java_com_mikoo_ai_MainActivity_nativeGenerate(JNIEnv* env, jobject /* thiz */, j
     }
     g_cancel.store(false, std::memory_order_release);
     if (!g_state.model_loaded) {
-        return utf8_to_jstring(env, "Mikoo model is not loaded yet. Train and quantize the checkpoint, then connect the validated runtime adapter.");
+        const std::string response =
+            "I received your request offline.\n\n"
+            "Mikoo chat is active, but code generation is unavailable because the trained local checkpoint is not loaded yet.\n"
+            "No network or external model will be used.\n\n"
+            "Next step: connect the validated self-trained Mikoo checkpoint and native inference adapter."
+            "\n\nPrompt size received: " + std::to_string(input.size()) + " characters.";
+        return utf8_to_jstring(env, response);
     }
     // TODO: Stream tokens from the selected runtime through a bounded JNI callback.
     // This placeholder deliberately does not fabricate model output.
