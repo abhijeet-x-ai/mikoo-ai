@@ -60,6 +60,7 @@ def main() -> None:
     parser.add_argument("--steps", type=int, default=2400)
     parser.add_argument("--batch-size", type=int, default=32)
     parser.add_argument("--seed", type=int, default=20260824)
+    parser.add_argument("--lr", type=float, default=0.003)
     args = parser.parse_args()
 
     torch.manual_seed(args.seed)
@@ -71,7 +72,7 @@ def main() -> None:
     tokens = torch.from_numpy(np.frombuffer(raw, dtype=np.uint8).copy()).long()
     windows = tokens.unfold(0, SEQ_LEN + 1, 1)
     model = BootstrapGRU()
-    optimizer = torch.optim.AdamW(model.parameters(), lr=0.003, weight_decay=0.0)
+    optimizer = torch.optim.AdamW(model.parameters(), lr=args.lr, weight_decay=0.0)
     model.train()
     for step in range(1, args.steps + 1):
         starts = torch.randint(0, windows.shape[0], (args.batch_size,))
