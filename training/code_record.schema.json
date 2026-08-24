@@ -1,0 +1,29 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://mikoo.ai/schemas/code-record-v1.json",
+  "title": "Mikoo Coding Training Record",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["record_id", "task_type", "language", "prompt", "license", "source", "split"],
+  "properties": {
+    "record_id": {"type": "string", "maxLength": 256},
+    "task_type": {"type": "string", "enum": ["completion", "explanation", "unit_tests", "debugging", "bug_fixing", "refactoring", "translation", "repository_context", "patch_proposal", "tool_use"]},
+    "language": {"type": "string", "maxLength": 64},
+    "prompt": {"type": "string", "maxLength": 100000},
+    "context": {"type": "string", "maxLength": 500000},
+    "response": {"type": "string", "maxLength": 200000},
+    "patch": {"type": "string", "maxLength": 200000},
+    "test_log": {"type": "string", "maxLength": 12000},
+    "tool_actions": {"type": "array", "maxItems": 64, "items": {"type": "object"}},
+    "license": {"type": "string", "maxLength": 128},
+    "source": {"type": "string", "maxLength": 2048},
+    "repository": {"type": "string", "maxLength": 512},
+    "path": {"type": "string", "maxLength": 2048},
+    "attribution": {"type": "string", "maxLength": 4000},
+    "content_sha256": {"type": "string", "pattern": "^[a-fA-F0-9]{64}$"},
+    "opt_out_status": {"type": "string", "enum": ["not_requested", "requested_removed", "unknown"]},
+    "split": {"type": "string", "enum": ["train", "validation", "test"]},
+    "teacher": {"type": "string", "maxLength": 256},
+    "teacher_terms_record": {"type": "string", "maxLength": 2048}
+  }
+}

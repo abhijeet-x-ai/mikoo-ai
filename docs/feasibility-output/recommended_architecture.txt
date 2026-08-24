@@ -1,0 +1,14 @@
+Recommended architecture parameter calculation
+vocab=24576, hidden=1152, layers=24, attention_heads=18, kv_heads=2, head_dim=64, intermediate=3072
+embedding=28,311,552
+q_projection=1,327,104
+k_projection=147,456
+v_projection=147,456
+o_projection=1,327,104
+attention_per_layer=2,949,120
+swiglu_per_layer=10,616,832
+norms_per_layer=2,304
+block_per_layer=13,568,256
+final_norm=1,152
+total=353,950,848
+total_millions=353.950848

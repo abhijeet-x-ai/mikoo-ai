@@ -1,0 +1,8 @@
+# Install on a dedicated training machine; versions should be pinned after validation.
+numpy>=1.26
+pyyaml>=6.0
+sentencepiece>=0.2
+safetensors>=0.4
+# Install an appropriate PyTorch build for the selected CUDA version.
+# torch
+# transformers (optional teacher/checkpoint interoperability)

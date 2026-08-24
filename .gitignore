@@ -1,0 +1,32 @@
+# Python
+__pycache__/
+*.py[cod]
+.venv/
+
+# Data and model artifacts
+/data/
+*.jsonl
+*.safetensors
+*.bin
+*.pt
+*.pth
+*.ckpt
+*.gguf
+*.pte
+*.tflite
+
+# Reports generated locally
+benchmarks/reports/*
+!benchmarks/reports/.gitkeep
+
+# Android/Gradle
+.gradle/
+build/
+app/build/
+local.properties
+*.iml
+
+# Secrets and local configuration
+.env
+.env.*
+secrets/

@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:padding="16dp">
+
+    <TextView
+        android:id="@+id/status"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Mikoo AI"
+        android:textSize="12sp"
+        android:paddingBottom="8dp" />
+
+    <Button
+        android:id="@+id/open_workspace_button"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Open Code Workspace" />
+
+    <TextView
+        android:id="@+id/workspace_status"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="No workspace selected"
+        android:textSize="12sp"
+        android:paddingBottom="8dp" />
+
+    <TextView
+        android:id="@+id/transcript"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:gravity="top|start"
+        android:textSize="16sp"
+        android:padding="8dp"
+        android:scrollbars="vertical" />
+
+    <EditText
+        android:id="@+id/message_input"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Write a message"
+        android:inputType="textCapSentences|textMultiLine"
+        android:maxLines="5" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:paddingTop="8dp">
+
+        <Button
+            android:id="@+id/send_button"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="Send" />
+
+        <Button
+            android:id="@+id/stop_button"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="Stop" />
+
+        <Button
+            android:id="@+id/clear_button"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="Clear" />
+    </LinearLayout>
+</LinearLayout>

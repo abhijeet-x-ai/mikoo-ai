@@ -1,0 +1,132 @@
+project: mikoo-medium-coding-multilingual-v0.3
+seed: 20260824
+languages:
+  - en
+  - bn
+  - hi
+model_spec: ../model/model_spec.json
+ram_policy:
+  hard_peak_application_mb: 749
+  preferred_peak_application_mb: 650
+  default_context_tokens: 512
+  recommended_context_tokens: 1024
+  stress_context_tokens: 2048
+  storage_limit_mb: null
+
+# Data paths are intentionally external to the repository.
+data:
+  raw_dir: ${MIKOO_DATA_DIR}/raw
+  cleaned_dir: ${MIKOO_DATA_DIR}/cleaned
+  instruction_dir: ${MIKOO_DATA_DIR}/instruction
+  eval_dir: ${MIKOO_DATA_DIR}/eval
+  require_license_manifest: true
+  require_source_attribution: true
+  normalize_unicode: NFKC
+  language_id_required: true
+  exact_deduplicate: true
+  near_deduplicate: true
+  toxicity_filter: true
+  pii_reduction: true
+  contamination_check: true
+  split_seed: 20260824
+  split_ratio:
+    train: 0.98
+    validation: 0.01
+    test: 0.01
+
+# Train tokenizer candidates and select by multilingual fertility and task validation.
+tokenizer:
+  candidates: [16384, 24576, 32768]
+  algorithm: [bpe, unigram]
+  character_coverage: 0.9995
+  byte_fallback: true
+  user_defined_symbols: ["<|system|>", "<|user|>", "<|assistant|>", "<|tool|>", "<|patch|>", "<|test|>", "<|error|>", "<|end|>"]
+
+pretraining:
+  objective: causal_language_modeling
+  context_tokens: 512
+  candidate_token_budgets: [100000000, 500000000, 1440000000]
+  batch_size_per_device: 8
+  gradient_accumulation_steps: 32
+  precision: bf16
+  optimizer: adamw
+  learning_rate: 0.0003
+  warmup_ratio: 0.02
+  weight_decay: 0.1
+  checkpoint_every_steps: 1000
+  validate_every_steps: 500
+  language_balancing: temperature_sampling
+
+instruction_tuning:
+  context_tokens: 512
+  max_response_tokens: 256
+  learning_rate: 0.00005
+  epochs: 2
+  task_mix:
+    conversation: 0.25
+    question_answering: 0.20
+    translation: 0.20
+    summarization: 0.15
+    rewriting: 0.10
+    reasoning: 0.05
+    coding: 0.05
+
+distillation:
+  enabled: true
+  teacher_used_during_inference: false
+  mode: generated_supervision_plus_optional_logits
+  temperature: 2.0
+  alpha_supervised: 0.6
+  alpha_distillation: 0.4
+  require_output_filtering: true
+  require_teacher_license_record: true
+
+acceptance:
+  no_language_loss_regression: true
+  quantization_quality_regression_max_percent: 5
+  mobile_peak_memory_mb_ceiling: 749
+  mobile_preferred_peak_memory_mb: 650
+
+# Coding-agent specialization. Code and trajectories must be license-reviewed.
+coding_agent:
+  enabled: true
+  languages:
+    python: 0.24
+    typescript_javascript: 0.20
+    kotlin_java: 0.16
+    cpp: 0.12
+    sql: 0.08
+    html_css: 0.06
+    bash: 0.04
+    json_yaml: 0.04
+    other: 0.06
+  task_mix:
+    code_completion: 0.15
+    code_explanation: 0.10
+    unit_test_generation: 0.15
+    bug_fixing: 0.15
+    refactoring: 0.10
+    error_diagnosis: 0.10
+    code_translation: 0.08
+    repository_context: 0.10
+    documentation: 0.04
+    security_review: 0.03
+  trajectory_requirements:
+    include_compiler_or_test_feedback: true
+    include_failed_attempts: true
+    include_final_diff: true
+    include_tool_result_checksums: true
+    max_files_per_task: 32
+    max_log_bytes: 12000
+  tool_policy:
+    tool_call_output_format: json_schema
+    require_approval_for_writes: true
+    require_approval_for_execution: true
+    network_access: false
+    destructive_commands: false
+    default_test_timeout_seconds: 60
+  verifier:
+    syntax_compile_check: true
+    unit_test_check: true
+    patch_applies_cleanly: true
+    regression_check: true
