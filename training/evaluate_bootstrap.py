@@ -10,7 +10,7 @@ from test_bootstrap_generation import generate, load
 CASES = [
     ("Hello", ["Hello", "Mikoo"]),
     ("Fix a bug in my selected file", ["fix", "patch"]),
-    ("Write tests for this function", ["function", "context"]),
+    ("Write tests for this function", ["function", "contract"]),
     ("Review this function", ["review", "check"]),
     ("বাংলায় বলো", ["Mikoo", "অফলাইনে"]),
 ]

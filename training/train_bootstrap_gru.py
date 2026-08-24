@@ -69,13 +69,15 @@ def main() -> None:
     if len(raw) < SEQ_LEN + 2:
         raise SystemExit("bootstrap corpus is too short")
     tokens = torch.from_numpy(np.frombuffer(raw, dtype=np.uint8).copy()).long()
+    windows = tokens.unfold(0, SEQ_LEN + 1, 1)
     model = BootstrapGRU()
     optimizer = torch.optim.AdamW(model.parameters(), lr=0.003, weight_decay=0.0)
     model.train()
     for step in range(1, args.steps + 1):
-        starts = torch.randint(0, len(tokens) - SEQ_LEN - 1, (args.batch_size,))
-        batch = torch.stack([tokens[start : start + SEQ_LEN] for start in starts])
-        target = torch.stack([tokens[start + 1 : start + SEQ_LEN + 1] for start in starts])
+        starts = torch.randint(0, windows.shape[0], (args.batch_size,))
+        window_batch = windows[starts]
+        batch = window_batch[:, :-1]
+        target = window_batch[:, 1:]
         logits = model(batch)
         loss = nn.functional.cross_entropy(logits.reshape(-1, VOCAB), target.reshape(-1))
         optimizer.zero_grad(set_to_none=True)
