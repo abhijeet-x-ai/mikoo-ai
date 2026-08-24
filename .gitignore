@@ -9,6 +9,7 @@ __pycache__/
 *.safetensors
 *.bin
 !android/app/src/main/assets/mikoo_bootstrap.bin
+!desktop/models/mikoo_bootstrap.bin
 *.pt
 *.pth
 *.ckpt
@@ -32,3 +33,4 @@ local.properties
 .env.*
 secrets/
 app/.cxx/
+desktop/src-tauri/target/

@@ -1,0 +1,77 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="theme-color" content="#101010" />
+    <title>Mikoo Desktop</title>
+    <link rel="stylesheet" href="/src/styles.css" />
+  </head>
+  <body>
+    <main class="app-shell">
+      <aside class="sidebar" id="sidebar" aria-label="Mikoo navigation">
+        <div class="sidebar-brand"><span class="brand-mark">✦</span><span>Mikoo</span></div>
+        <button class="nav-item active" data-view="chat">Chat</button>
+        <button class="nav-item" data-view="tasks">Tasks</button>
+        <button class="nav-item" data-view="agent">Agent</button>
+        <button class="nav-item" data-view="workspace">New workspace</button>
+        <button class="nav-item" data-view="history">Chat history</button>
+        <div class="sidebar-footer">Offline-first<br />No cloud inference</div>
+      </aside>
+
+      <section class="main-column">
+        <header class="topbar">
+          <button id="menu-button" class="icon-button" aria-label="Open navigation" aria-expanded="false">☰</button>
+          <div class="model-title"><strong>Mikoo 1.0</strong><span class="model-badge">LOCAL</span></div>
+          <div class="topbar-spacer"></div>
+          <span class="connection-pill" id="connection-pill">OFFLINE</span>
+        </header>
+
+        <section id="view-chat" class="view active-view">
+          <div class="status-row">
+            <span id="agent-state" class="state-pill">READY</span>
+            <span id="runtime-status" class="runtime-status">Loading local checkpoint…</span>
+          </div>
+          <div id="transcript" class="transcript" aria-live="polite"></div>
+          <div id="suggestions" class="suggestions">
+            <button data-prompt="Hello">Say hello</button>
+            <button data-prompt="Write a Python function to safely divide two numbers">Write a Python function</button>
+            <button data-prompt="Write tests for this function">Draft tests</button>
+          </div>
+          <form id="composer-form" class="composer-form">
+            <textarea id="prompt-input" rows="3" placeholder="Message Mikoo about your code" aria-label="Prompt"></textarea>
+            <div class="composer-footer">
+              <span class="local-label">✦ local model</span>
+              <button type="button" id="stop-button" class="secondary-button">Stop</button>
+              <button type="submit" id="send-button" class="send-button" aria-label="Send prompt">↑</button>
+            </div>
+          </form>
+          <button id="clear-button" class="text-button">Clear session</button>
+        </section>
+
+        <section id="view-tasks" class="view panel-view">
+          <h1>Tasks</h1><p class="muted">Plan coding work locally before asking Mikoo to propose a change.</p>
+          <div class="panel-line"><span>Current queue</span><strong id="task-count">0 tasks</strong></div>
+          <div class="empty-panel">No tasks yet. Start from Chat and assign a coding request.</div>
+        </section>
+
+        <section id="view-agent" class="view panel-view">
+          <h1>Agent controls</h1><p class="muted">The local agent is approval-gated and never silently writes or executes code.</p>
+          <div class="control-grid"><div><strong>Model</strong><span id="agent-model">Mikoo Nano</span></div><div><strong>Output</strong><span>768 byte-tokens</span></div><div><strong>Network</strong><span>Disabled</span></div><div><strong>Writes</strong><span>Approval required</span></div></div>
+        </section>
+
+        <section id="view-workspace" class="view panel-view">
+          <h1>New workspace</h1><p class="muted">Choose a local folder. Mikoo will only use the path you explicitly select.</p>
+          <form id="workspace-form" class="workspace-form"><input id="workspace-input" placeholder="/path/to/project" aria-label="Workspace path" /><button class="primary-button" type="submit">Set workspace</button></form>
+          <div id="workspace-result" class="empty-panel">No workspace selected.</div>
+        </section>
+
+        <section id="view-history" class="view panel-view">
+          <h1>Chat history</h1><p class="muted">History is stored locally in this desktop profile.</p>
+          <div id="history-list" class="history-list"></div>
+        </section>
+      </section>
+    </main>
+    <script type="module" src="/src/main.js"></script>
+  </body>
+</html>

@@ -1,0 +1,11 @@
+{
+  "name": "mikoo-desktop",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Mikoo offline coding agent desktop shell",
+  "scripts": {
+    "dev": "cargo tauri dev",
+    "build": "cargo tauri build"
+  },
+  "license": "MIT"
+}
