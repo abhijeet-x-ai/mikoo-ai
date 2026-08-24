@@ -1,12 +1,14 @@
 package com.mikoo.ai
 
 import android.app.Activity
-import android.os.Bundle
-import android.os.SystemClock
 import android.content.Intent
 import android.net.Uri
+import android.os.Bundle
+import android.os.SystemClock
+import android.view.View
 import android.widget.Button
 import android.widget.EditText
+import android.widget.LinearLayout
 import android.widget.TextView
 
 class MainActivity : Activity() {
@@ -14,6 +16,8 @@ class MainActivity : Activity() {
     private lateinit var transcript: TextView
     private lateinit var status: TextView
     private lateinit var workspaceStatus: TextView
+    private lateinit var tasksPanel: LinearLayout
+    private lateinit var agentPanel: LinearLayout
     private var workspaceUri: Uri? = null
 
     private external fun nativeStatus(): String
@@ -30,24 +34,61 @@ class MainActivity : Activity() {
         transcript = findViewById(R.id.transcript)
         status = findViewById(R.id.status)
         workspaceStatus = findViewById(R.id.workspace_status)
+        tasksPanel = findViewById(R.id.tasks_panel)
+        agentPanel = findViewById(R.id.agent_panel)
+
         val send = findViewById<Button>(R.id.send_button)
         val openWorkspace = findViewById<Button>(R.id.open_workspace_button)
         val stop = findViewById<Button>(R.id.stop_button)
         val clear = findViewById<Button>(R.id.clear_button)
+        val tasksTab = findViewById<Button>(R.id.tasks_tab)
+        val agentTab = findViewById<Button>(R.id.agent_tab)
+        val bannerClose = findViewById<TextView>(R.id.banner_close)
+        val back = findViewById<TextView>(R.id.back_button)
 
-        status.text = "${nativeStatus()} | deviceMemoryClass=${MemoryPolicy.deviceMemoryClassMb(this)} MB"
+        status.text = "Offline • ${nativeStatus()} • ${MemoryPolicy.deviceMemoryClassMb(this)} MB device class"
         send.setOnClickListener { sendMessage() }
         openWorkspace.setOnClickListener {
             startActivityForResult(Intent(Intent.ACTION_OPEN_DOCUMENT_TREE), REQUEST_WORKSPACE)
         }
         stop.setOnClickListener {
             nativeCancel()
-            status.text = "Generation cancelled."
+            status.text = "Generation cancelled • offline"
         }
         clear.setOnClickListener {
             transcript.text = ""
-            status.text = nativeStatus()
+            status.text = "Offline • ${nativeStatus()}"
         }
+        tasksTab.setOnClickListener { showTasks() }
+        agentTab.setOnClickListener { showAgent() }
+        bannerClose.setOnClickListener { findViewById<View>(R.id.offline_banner).visibility = View.GONE }
+        back.setOnClickListener { finish() }
+
+        bindSuggestion(R.id.suggestion_one, "Fix a bug in my selected file")
+        bindSuggestion(R.id.suggestion_two, "Review this function and suggest a safer patch")
+        bindSuggestion(R.id.suggestion_three, "Write tests for the current workspace")
+    }
+
+    private fun bindSuggestion(id: Int, prompt: String) {
+        findViewById<TextView>(id).setOnClickListener {
+            input.setText(prompt)
+            input.setSelection(input.length())
+            input.requestFocus()
+        }
+    }
+
+    private fun showTasks() {
+        tasksPanel.visibility = View.VISIBLE
+        agentPanel.visibility = View.GONE
+        findViewById<Button>(R.id.tasks_tab).setBackgroundResource(R.drawable.bg_tab_active)
+        findViewById<Button>(R.id.agent_tab).setBackgroundResource(R.drawable.bg_tab_inactive)
+    }
+
+    private fun showAgent() {
+        tasksPanel.visibility = View.GONE
+        agentPanel.visibility = View.VISIBLE
+        findViewById<Button>(R.id.tasks_tab).setBackgroundResource(R.drawable.bg_tab_inactive)
+        findViewById<Button>(R.id.agent_tab).setBackgroundResource(R.drawable.bg_tab_active)
     }
 
     private fun sendMessage() {
@@ -59,22 +100,22 @@ class MainActivity : Activity() {
         }
 
         val prompt = transcript.text.toString().takeLast(24_000) + "\nUser: " + message
-        transcript.append("\nYou: $message\n")
+        transcript.append("\nYou\n$message\n")
         input.setText("")
         if (MemoryPolicy.shouldStopGeneration()) {
             status.text = "Memory limit reached; generation stopped safely."
             return
         }
         val contextTokens = MemoryPolicy.safeContextTokens()
-        status.text = "Generating… context=$contextTokens"
+        status.text = "Mikoo is thinking locally • context=$contextTokens"
         val started = SystemClock.elapsedRealtime()
 
         Thread {
-            val response = nativeGenerate(prompt, 256, contextTokens)
+            val response = nativeGenerate(prompt, MemoryPolicy.DEFAULT_GENERATION_TOKENS, contextTokens)
             val elapsed = (SystemClock.elapsedRealtime() - started).coerceAtLeast(1)
             runOnUiThread {
-                transcript.append("Mikoo: $response\n")
-                status.text = "${nativeStatus()} | ${elapsed} ms | context=${contextTokens} | pss=${MemoryPolicy.processPssMb()} MB | tokens=${nativeGeneratedTokenCount()}"
+                transcript.append("\nMikoo\n$response\n")
+                status.text = "Offline • ${nativeStatus()} • ${elapsed} ms • context=$contextTokens • pss=${MemoryPolicy.processPssMb()} MB • tokens=${nativeGeneratedTokenCount()}"
             }
         }.start()
     }
@@ -86,7 +127,7 @@ class MainActivity : Activity() {
             val flags = data.flags and (Intent.FLAG_GRANT_READ_URI_PERMISSION or Intent.FLAG_GRANT_WRITE_URI_PERMISSION)
             contentResolver.takePersistableUriPermission(uri, flags)
             workspaceUri = uri
-            workspaceStatus.text = "Workspace selected: ${uri.lastPathSegment ?: "local folder"}"
+            workspaceStatus.text = "Workspace selected • ${uri.lastPathSegment ?: "local folder"}"
         }
     }
 

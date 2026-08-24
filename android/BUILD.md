@@ -1,18 +1,33 @@
-# Android build
+# Mikoo Android build
 
-The project is a native Kotlin/C++ prototype. Install JDK 17+, Android SDK platform 35, Android Build Tools 35.x, Android NDK, CMake 3.22.1, and Gradle 8.x on the build machine.
+## Environment used for the debug APK
 
-From this directory, set `ANDROID_HOME` or `ANDROID_SDK_ROOT`, accept the required Android SDK licenses, and run:
+The local build toolchain is installed outside the repository at `/home/ubuntu/mikoo-toolchain`:
+
+- OpenJDK 21 with `javac`
+- Gradle 8.11.1
+- Android SDK Platform 35
+- Android Build Tools 35.0.0
+- Android NDK 27.0.12077973
+- CMake 3.22.1
+
+The repository's `local.properties` points to the local SDK path. Do not commit personal SDK paths if the project is moved to another machine.
+
+## Build command
 
 ```bash
-gradle :app:assembleDebug
-adb install -r app/build/outputs/apk/debug/app-debug.apk
+export JAVA_HOME=/usr/lib/jvm/java-21-openjdk-amd64
+export ANDROID_SDK_ROOT=/home/ubuntu/mikoo-toolchain/android-sdk
+export ANDROID_HOME="$ANDROID_SDK_ROOT"
+export PATH="$JAVA_HOME/bin:$ANDROID_SDK_ROOT/cmdline-tools/latest/bin:$ANDROID_SDK_ROOT/platform-tools:$ANDROID_SDK_ROOT/build-tools/35.0.0:/home/ubuntu/mikoo-toolchain/gradle/gradle-8.11.1/bin:$PATH"
+cd android
+gradle --no-daemon assembleDebug
 ```
 
-The first ABI is `arm64-v8a`. Add `armeabi-v7a` only after the C++ runtime and model are validated on an ARMv7 device.
+Output: `app/build/outputs/apk/debug/app-debug.apk`
 
-The current native library is a guarded JNI adapter and deliberately reports that the trained model/runtime is pending. It does not fabricate generated answers. Before release, replace the guarded loader and generation branch in `mikoo_jni.cpp` with the validated GGUF-compatible or ExecuTorch runtime integration, then run the offline and memory benchmark suite.
+## Verified status
 
-## Sandbox validation status
+The debug APK builds successfully, is v2-signed by the debug keystore, contains the ARM64 native library `libmikoo_jni.so`, targets SDK 35, and has package ID `com.mikoo.ai`. The verified artifact is approximately 3.7 MB because no trained model checkpoint is bundled.
 
-The sandbox used to prepare this repository has no detected Android SDK, Gradle, ADB, PyTorch installation, CUDA GPU, or physical Android device. Python syntax, model-manifest, benchmark-template, and offline-permission checks pass. APK compilation, checkpoint training, and device performance measurements remain external execution steps.
+No physical Android device is connected in the build environment, so install, first-token latency, PSS/RSS, thermal, battery, cancellation, crash, and ANR measurements remain pending. The native bridge reports a pending runtime adapter until a real trained and validated local checkpoint is connected.

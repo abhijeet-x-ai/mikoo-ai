@@ -3,73 +3,349 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    android:padding="16dp">
+    android:background="@color/mikoo_background"
+    android:paddingStart="20dp"
+    android:paddingEnd="20dp"
+    android:paddingTop="12dp">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="56dp"
+        android:gravity="center_vertical"
+        android:orientation="horizontal">
+
+        <TextView
+            android:id="@+id/back_button"
+            android:layout_width="36dp"
+            android:layout_height="48dp"
+            android:gravity="center"
+            android:text="‹"
+            android:textColor="@color/mikoo_text_secondary"
+            android:textSize="38sp" />
+
+        <TextView
+            android:id="@+id/model_title"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="Mikoo 1.0  ▾"
+            android:textColor="@color/mikoo_text_primary"
+            android:textSize="23sp"
+            android:textStyle="bold" />
+
+        <TextView
+            android:id="@+id/model_mode"
+            android:layout_width="96dp"
+            android:layout_height="42dp"
+            android:background="@drawable/bg_composer"
+            android:gravity="center"
+            android:text="✦  ∞"
+            android:textColor="@color/mikoo_text_primary"
+            android:textSize="22sp" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/offline_banner"
+        android:layout_width="match_parent"
+        android:layout_height="58dp"
+        android:layout_marginTop="8dp"
+        android:background="@drawable/bg_banner"
+        android:gravity="center_vertical"
+        android:orientation="horizontal"
+        android:paddingStart="18dp"
+        android:paddingEnd="18dp">
+
+        <TextView
+            android:layout_width="34dp"
+            android:layout_height="wrap_content"
+            android:text="✦"
+            android:textColor="@color/mikoo_blue"
+            android:textSize="24sp" />
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="Mikoo is running locally"
+            android:textColor="@color/mikoo_text_primary"
+            android:textSize="15sp" />
+
+        <TextView
+            android:id="@+id/banner_close"
+            android:layout_width="28dp"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:text="×"
+            android:textColor="@color/mikoo_text_secondary"
+            android:textSize="24sp" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/mode_switcher"
+        android:layout_width="match_parent"
+        android:layout_height="52dp"
+        android:layout_marginTop="18dp"
+        android:background="@drawable/bg_tab_inactive"
+        android:padding="4dp">
+
+        <Button
+            android:id="@+id/tasks_tab"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:background="@drawable/bg_tab_inactive"
+            android:minHeight="0dp"
+            android:text="Tasks"
+            android:textAllCaps="false"
+            android:textColor="@color/mikoo_text_secondary"
+            android:textSize="16sp" />
+
+        <Button
+            android:id="@+id/agent_tab"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:background="@drawable/bg_tab_active"
+            android:minHeight="0dp"
+            android:text="Agent"
+            android:textAllCaps="false"
+            android:textColor="@color/mikoo_text_primary"
+            android:textSize="16sp"
+            android:textStyle="bold" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/workspace_row"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:layout_marginTop="10dp"
+        android:gravity="center_vertical"
+        android:orientation="horizontal">
+
+        <TextView
+            android:id="@+id/workspace_status"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:maxLines="1"
+            android:ellipsize="middle"
+            android:text="No code workspace selected"
+            android:textColor="@color/mikoo_text_muted"
+            android:textSize="13sp" />
+
+        <Button
+            android:id="@+id/open_workspace_button"
+            android:layout_width="wrap_content"
+            android:layout_height="40dp"
+            android:background="@drawable/bg_primary_button"
+            android:minHeight="0dp"
+            android:paddingStart="14dp"
+            android:paddingEnd="14dp"
+            android:text="＋ Workspace"
+            android:textAllCaps="false"
+            android:textColor="@color/mikoo_text_primary"
+            android:textSize="13sp" />
+    </LinearLayout>
 
     <TextView
         android:id="@+id/status"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Mikoo AI"
-        android:textSize="12sp"
-        android:paddingBottom="8dp" />
+        android:layout_marginTop="2dp"
+        android:text="Offline • checkpoint pending"
+        android:textColor="@color/mikoo_text_muted"
+        android:textSize="12sp" />
 
-    <Button
-        android:id="@+id/open_workspace_button"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="Open Code Workspace" />
-
-    <TextView
-        android:id="@+id/workspace_status"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="No workspace selected"
-        android:textSize="12sp"
-        android:paddingBottom="8dp" />
-
-    <TextView
-        android:id="@+id/transcript"
+    <LinearLayout
+        android:id="@+id/tasks_panel"
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="1"
-        android:gravity="top|start"
-        android:textSize="16sp"
-        android:padding="8dp"
-        android:scrollbars="vertical" />
+        android:layout_marginTop="16dp"
+        android:orientation="vertical"
+        android:visibility="gone">
 
-    <EditText
-        android:id="@+id/message_input"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:hint="Write a message"
-        android:inputType="textCapSentences|textMultiLine"
-        android:maxLines="5" />
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Recent tasks"
+            android:textColor="@color/mikoo_text_primary"
+            android:textSize="22sp"
+            android:textStyle="bold" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="18dp"
+            android:background="@drawable/bg_surface"
+            android:padding="18dp"
+            android:text="⌁  Build a local coding agent\n\n     Model checkpoint pending"
+            android:textColor="@color/mikoo_text_secondary"
+            android:textSize="16sp" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:background="@drawable/bg_surface"
+            android:padding="18dp"
+            android:text="⌁  Validate Android workspace\n\n     Ready for device testing"
+            android:textColor="@color/mikoo_text_secondary"
+            android:textSize="16sp" />
+    </LinearLayout>
 
     <LinearLayout
+        android:id="@+id/agent_panel"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:layout_marginTop="14dp"
+        android:orientation="vertical">
+
+        <TextView
+            android:id="@+id/suggestions_title"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Suggested for you"
+            android:textColor="@color/mikoo_text_primary"
+            android:textSize="20sp"
+            android:textStyle="bold" />
+
+        <TextView
+            android:id="@+id/suggestion_one"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="14dp"
+            android:background="@drawable/bg_surface"
+            android:clickable="true"
+            android:focusable="true"
+            android:padding="16dp"
+            android:text="Fix a bug in my selected file"
+            android:textColor="@color/mikoo_text_secondary"
+            android:textSize="16sp" />
+
+        <TextView
+            android:id="@+id/suggestion_two"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:background="@drawable/bg_surface"
+            android:clickable="true"
+            android:focusable="true"
+            android:padding="16dp"
+            android:text="Review this function and suggest a safer patch"
+            android:textColor="@color/mikoo_text_secondary"
+            android:textSize="16sp" />
+
+        <TextView
+            android:id="@+id/suggestion_three"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:background="@drawable/bg_surface"
+            android:clickable="true"
+            android:focusable="true"
+            android:padding="16dp"
+            android:text="Write tests for the current workspace"
+            android:textColor="@color/mikoo_text_secondary"
+            android:textSize="16sp" />
+
+        <ScrollView
+            android:id="@+id/transcript_scroll"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:layout_marginTop="12dp"
+            android:fillViewport="true">
+
+            <TextView
+                android:id="@+id/transcript"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="top|start"
+                android:lineSpacingExtra="4dp"
+                android:paddingTop="8dp"
+                android:scrollbars="vertical"
+                android:textColor="@color/mikoo_text_primary"
+                android:textSize="16sp" />
+        </ScrollView>
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/composer"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:paddingTop="8dp">
+        android:layout_marginTop="12dp"
+        android:background="@drawable/bg_composer"
+        android:gravity="center_vertical"
+        android:orientation="vertical"
+        android:paddingStart="14dp"
+        android:paddingEnd="10dp"
+        android:paddingTop="8dp"
+        android:paddingBottom="8dp">
 
-        <Button
-            android:id="@+id/send_button"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:text="Send" />
+        <EditText
+            android:id="@+id/message_input"
+            android:layout_width="match_parent"
+            android:layout_height="54dp"
+            android:background="@android:color/transparent"
+            android:gravity="top|start"
+            android:hint="Assign a coding task or type / for more"
+            android:inputType="textCapSentences|textMultiLine"
+            android:maxLines="4"
+            android:padding="0dp"
+            android:textColor="@color/mikoo_text_primary"
+            android:textColorHint="@color/mikoo_text_muted"
+            android:textSize="16sp" />
 
-        <Button
-            android:id="@+id/stop_button"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:text="Stop" />
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="44dp"
+            android:gravity="center_vertical"
+            android:orientation="horizontal">
 
-        <Button
-            android:id="@+id/clear_button"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:text="Clear" />
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="＋   ⌘  local"
+                android:textColor="@color/mikoo_text_secondary"
+                android:textSize="16sp" />
+
+            <Button
+                android:id="@+id/stop_button"
+                android:layout_width="62dp"
+                android:layout_height="38dp"
+                android:background="@drawable/bg_tab_inactive"
+                android:minHeight="0dp"
+                android:text="Stop"
+                android:textAllCaps="false"
+                android:textColor="@color/mikoo_text_secondary"
+                android:textSize="12sp" />
+
+            <Button
+                android:id="@+id/send_button"
+                android:layout_width="54dp"
+                android:layout_height="38dp"
+                android:layout_marginStart="6dp"
+                android:background="@drawable/bg_primary_button"
+                android:minHeight="0dp"
+                android:text="↑"
+                android:textAllCaps="false"
+                android:textColor="@color/mikoo_text_primary"
+                android:textSize="20sp" />
+        </LinearLayout>
     </LinearLayout>
+
+    <Button
+        android:id="@+id/clear_button"
+        android:layout_width="wrap_content"
+        android:layout_height="32dp"
+        android:layout_gravity="end"
+        android:background="@android:color/transparent"
+        android:minHeight="0dp"
+        android:text="Clear session"
+        android:textAllCaps="false"
+        android:textColor="@color/mikoo_text_muted"
+        android:textSize="11sp" />
 </LinearLayout>

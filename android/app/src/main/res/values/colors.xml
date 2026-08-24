@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="mikoo_background">#121212</color>
+    <color name="mikoo_surface">#242424</color>
+    <color name="mikoo_surface_raised">#2D2D2D</color>
+    <color name="mikoo_surface_soft">#1C1C1C</color>
+    <color name="mikoo_text_primary">#F5F5F5</color>
+    <color name="mikoo_text_secondary">#B8B8B8</color>
+    <color name="mikoo_text_muted">#777777</color>
+    <color name="mikoo_blue">#2196F3</color>
+    <color name="mikoo_blue_soft">#20364A</color>
+    <color name="mikoo_green">#5CCB8A</color>
+    <color name="mikoo_divider">#383838</color>
+    <color name="mikoo_warning">#E8A84E</color>
+</resources>
