@@ -53,5 +53,13 @@
     "disk_cache_is_bounded_by_user_setting": true,
     "model_file_is_static_during_inference": true
   },
-  "status": "architecture_specification_only_checkpoint_pending"
+  "bootstrap_checkpoint": {
+    "artifact": "../android/app/src/main/assets/mikoo_bootstrap.bin",
+    "architecture": "byte_level_gru",
+    "parameter_count": 395008,
+    "purpose": "offline JNI integration and low-memory smoke test",
+    "production_model": false,
+    "self_authored_corpus": "../training/bootstrap_corpus.txt"
+  },
+  "status": "bootstrap_checkpoint_integrated_production_checkpoint_pending"
 }

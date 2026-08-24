@@ -15,6 +15,7 @@ import android.widget.LinearLayout
 import android.widget.ProgressBar
 import android.widget.ScrollView
 import android.widget.TextView
+import java.io.File
 
 class MainActivity : Activity() {
     private lateinit var input: EditText
@@ -62,7 +63,9 @@ class MainActivity : Activity() {
         thinkingProgress = findViewById(R.id.thinking_progress)
         transcriptScroll = findViewById(R.id.transcript_scroll)
 
+        val localModelLoaded = loadBundledCheckpoint()
         status.text = "Offline • ${nativeStatus()} • ${MemoryPolicy.deviceMemoryClassMb(this)} MB device class"
+        agentState.text = if (localModelLoaded) "LOCAL MODEL" else "BASELINE"
         restoreCurrentSession()
         renderHistory()
 
@@ -96,6 +99,20 @@ class MainActivity : Activity() {
             input.setText(prompt)
             input.setSelection(input.length())
             input.requestFocus()
+        }
+    }
+
+    private fun loadBundledCheckpoint(): Boolean {
+        return try {
+            val target = File(filesDir, "mikoo_bootstrap.bin")
+            if (!target.exists() || target.length() == 0L) {
+                assets.open("mikoo_bootstrap.bin").use { source ->
+                    target.outputStream().use { destination -> source.copyTo(destination) }
+                }
+            }
+            nativeLoadModel(target.absolutePath)
+        } catch (_: Throwable) {
+            false
         }
     }
 
@@ -140,7 +157,7 @@ class MainActivity : Activity() {
         composer.visibility = View.GONE
         clearButton.visibility = View.GONE
         status.visibility = View.VISIBLE
-        agentState.text = "HISTORY"
+            agentState.text = "HISTORY"
         status.text = "Local chat history • stored only on this device"
         renderHistory()
     }
